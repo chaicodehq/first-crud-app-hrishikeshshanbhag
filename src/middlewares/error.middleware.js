@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 /**
  * TODO: Handle errors
  *
@@ -9,5 +10,19 @@
  * 3. Other errors → Use err.status (or 500) and err.message
  */
 export function errorHandler(err, req, res, next) {
-  // Your code here
+  if (err instanceof mongoose.Error.ValidationError) {
+    return res.status(400).json({
+      error: {
+        message: err.message,
+      },
+    });
+  } else if (err instanceof mongoose.Error.CastError) {
+    return res.status(400).json({
+      error: {
+        message: err.message,
+      },
+    });
+  } else {
+    return res.status(500).json({ error: err.message });
+  }
 }
